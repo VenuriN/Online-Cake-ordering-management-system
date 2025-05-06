@@ -2,12 +2,14 @@
 import mongoose from 'mongoose';
 
 const customOrderSchema = new mongoose.Schema({
-  // Remove the orderId field
-  // Other fields...
+  orderId: {
+    type: String,
+    unique: true
+  },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: mongoose.Schema.Types.Mixed, // This allows both ObjectId and String
+    required: true,
+    index: true // Add an index for better query performance
   },
   cakeSize: {
     type: String,
@@ -108,6 +110,18 @@ const customOrderSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+// Pre-save hook to generate a unique orderId
+customOrderSchema.pre('save', async function(next) {
+  // Only generate orderId if it doesn't exist
+  if (!this.orderId) {
+    // Generate a unique order ID based on timestamp and random string
+    const timestamp = new Date().getTime();
+    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+    this.orderId = `ORD-${timestamp}-${randomStr}`;
+  }
+  next();
 });
 
 const CustomOrder = mongoose.model('CustomOrder', customOrderSchema);

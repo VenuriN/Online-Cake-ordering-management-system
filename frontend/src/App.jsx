@@ -13,7 +13,9 @@ function AppContent() {
   return (
     <div>
       {isAdminRoute ? <AdminHeader /> : <Header />}
-      <AppRoutes />
+      <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+        <AppRoutes />
+      </div>
       {isAdminRoute ? <AdminFooter /> : <Footer />}
     </div>
   );

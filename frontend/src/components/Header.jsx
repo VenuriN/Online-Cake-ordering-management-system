@@ -40,10 +40,18 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
+    const checkUserData = () => {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        setUser(JSON.parse(userData));
+      }
+    };
+
+    // Initial check
+    checkUserData();
+
+    // Set up interval for real-time checks
+    const interval = setInterval(checkUserData, 1000);
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -53,14 +61,15 @@ const Header = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       document.body.style.overflow = 'auto';
+      clearInterval(interval);
     };
   }, []);
-
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     setUser(null);
     navigate('/login');
+    window.location.reload();
   };
 
   return (
@@ -121,13 +130,13 @@ const Header = () => {
                       className="bg-primary rounded-circle p-2 text-white user-avatar d-flex align-items-center justify-content-center shadow-sm"
                     >
                     </motion.div>
-                    <span className="ms-2 d-none d-sm-inline fw-medium">{user.firstName}</span>
+                    <span className="ms-2 d-none d-sm-inline fw-medium">{user.name}</span>
                   </DropdownToggle>
                   
                   <DropdownMenu end className="mt-2 border-0 shadow-lg rounded-4" style={{ minWidth: '180px' }}>
                     <DropdownItem header className="border-bottom">
                       <div className="text-center py-3">
-                        <div className="fw-bold mb-1">{`${user.firstName} ${user.lastName}`}</div>
+                        <div className="fw-bold mb-1">{`${user.email}`}</div>
                       </div>
                     </DropdownItem>
                     

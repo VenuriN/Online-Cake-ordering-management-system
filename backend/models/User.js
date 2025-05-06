@@ -1,13 +1,7 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  lastName: {
+  name: {
     type: String,
     required: true,
     trim: true
@@ -19,38 +13,48 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
-  username: {
+  password: {
     type: String,
-    sparse: true, 
+    required: true
   },
   phone: {
     type: String,
     required: true,
     trim: true
   },
-  password: {
+  address: {
     type: String,
-    required: true,
-    minlength: 8
+    default: ""
+  },
+  city: {
+    type: String,
+    default: ""
+  },
+  postalCode: {
+    type: String,
+    default: ""
   },
   role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  orders: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CustomOrder'
+  }],
+  passwordResetOTP: {
+    code: {
+      type: String,
+      default: null
+    },
+    expiresAt: {
+      type: Date,
+      default: null
+    }
   }
+}, {
+  timestamps: true
 });
 
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    next();
-  }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
-
-export default mongoose.model('User', userSchema);
-
+export default mongoose.model("User", userSchema);

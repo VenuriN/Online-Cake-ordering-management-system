@@ -13,7 +13,7 @@ const AdminFooter = () => {
             <div className="d-flex align-items-center justify-content-center justify-content-md-start">
               <span className="h5 mb-0 me-2">🍰</span>
               <div>
-                <div className="fw-bold">Sweet Delights</div>
+                <div className="fw-bold">HOLY SPATULA</div>
                 <div className="small text-primary">Administration System</div>
               </div>
             </div>
